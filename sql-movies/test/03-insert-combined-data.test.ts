@@ -1,4 +1,4 @@
-import _, { escape, map } from "lodash";
+import _ from "lodash";
 import { Database } from "../src/database";
 import { CsvLoader } from "../src/data/csv-loader";
 import {
@@ -11,8 +11,7 @@ import { Rating } from "../src/data/types";
 import { minutes } from "./utils";
 
 const insertRatings = (movieId: number, ratings: Rating[]) => {
-  return (`INSERT INTO ${MOVIE_RATINGS} (user_id, movie_id, rating, time_created) VALUES` +
-  ratings.map(rating => `(${rating.userId}, ${movieId}, ${rating.rating}, '${escape(rating.time_created)}')`))
+  throw new Error(`todo`);
 };
 
 describe("Insert Combined Data", () => {
