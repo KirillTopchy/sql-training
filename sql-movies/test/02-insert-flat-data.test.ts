@@ -24,29 +24,46 @@ import { minutes } from "./utils";
 
 const insertActors = (actors: string[]) => {
   return (
-    `insert into actors (full_name) values` +
+    `INSERT INTO ${ACTORS} (full_name) VALUES` +
     actors.map(actor => `('${escape(actor)}')`).join(",")
   );
 };
 
 const insertKeywords = (keywords: string[]) => {
-  throw new Error(`todo`);
+  return (
+  `INSERT INTO ${KEYWORDS} (keyword) VALUES` +
+    keywords.map(keywords => `('${escape(keywords)}')`).join(",")
+  );
 };
 
 const insertDirectors = (directors: string[]) => {
-  throw new Error(`todo`);
+  return (
+    `INSERT INTO ${DIRECTORS} (full_name) VALUES` +
+      directors.map(directors => `('${escape(directors)}')`).join(",")
+    );
 };
 
 const insertGenres = (genres: string[]) => {
-  throw new Error(`todo`);
+  return (
+    `INSERT INTO ${GENRES} (genre) VALUES` +
+    genres.map(genres => `('${escape(genres)}')`).join(",")
+    );
 };
 
 const insertProductionCompanies = (companies: string[]) => {
-  throw new Error(`todo`);
+  return (
+    `INSERT INTO ${PRODUCTION_COMPANIES} (company_name) VALUES` +
+    companies.map(companies => `('${escape(companies)}')`).join(",")
+    );
 };
 
 const insertMovies = (movies: Movie[]) => {
-  throw new Error(`todo`);
+  return (
+    `INSERT INTO ${MOVIES} (imdb_id, popularity, budget, budget_adjusted, revenue, revenue_adjusted, original_title, homepage, tagline, overview, runtime, release_date) VALUES` +
+    movies.map(movies => `('${escape(movies.imdbId)}', ${movies.popularity}, ${movies.budget}, ${movies.budgetAdjusted}, 
+    ${movies.revenue}, ${movies.revenueAdjusted}, '${escape(movies.originalTitle)}', '${escape(movies.homepage)}', 
+    '${escape(movies.tagline ? movies.tagline : ' ')}', '${escape(movies.overview)}', ${movies.runtime}, '${escape(movies.releaseDate)}')`).join(",")
+    );
 };
 
 describe("Insert Flat Data", () => {
