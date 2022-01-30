@@ -5,7 +5,12 @@ import {
   MOVIE_ACTORS,
   MOVIE_DIRECTORS,
   MOVIE_PRODUCTION_COMPANIES,
-  MOVIES
+  MOVIES,
+  GENRES,
+  ACTORS,
+  KEYWORDS,
+  PRODUCTION_COMPANIES,
+  DIRECTORS
 } from "../src/table-names";
 import { Database } from "../src/database";
 import { tableInfo } from "../src/queries/table-info";
@@ -15,30 +20,40 @@ const CREATE_MOVIE_GENRES_TABLE = `CREATE TABLE ${MOVIE_GENRES} (
 movie_id integer NOT NULL,
 genre_id integer NOT NULL,
 PRIMARY KEY(movie_id, genre_id)
+FOREIGN KEY (movie_id) REFERENCES ${MOVIES} (id)
+FOREIGN KEY (genre_id) REFERENCES ${GENRES} (id)
 )`;
 
 const CREATE_MOVIE_ACTORS_TABLE = `CREATE TABLE ${MOVIE_ACTORS} (
 movie_id integer NOT NULL,
 actor_id integer NOT NULL,
 PRIMARY KEY(movie_id, actor_id)
+FOREIGN KEY (movie_id) REFERENCES ${MOVIES} (id)
+FOREIGN KEY (actor_id) REFERENCES ${ACTORS} (id)
 )`;
 
 const CREATE_MOVIE_DIRECTORS_TABLE = `CREATE TABLE ${MOVIE_DIRECTORS} (
 movie_id integer NOT NULL,
 director_id integer NOT NULL,
 PRIMARY KEY(movie_id, director_id)
+FOREIGN KEY (movie_id) REFERENCES ${MOVIES} (id)
+FOREIGN KEY (director_id) REFERENCES ${DIRECTORS} (id)
 )`;
 
 const CREATE_MOVIE_KEYWORDS_TABLE = `CREATE TABLE ${MOVIE_KEYWORDS} (
 movie_id integer NOT NULL,
 keyword_id integer NOT NULL,
 PRIMARY KEY(movie_id, keyword_id)
+FOREIGN KEY (movie_id) REFERENCES ${MOVIES} (id)
+FOREIGN KEY (keyword_id) REFERENCES ${KEYWORDS} (id)
 )`;
 
 const CREATE_MOVIE_PRODUCTION_COMPANIES_TABLE = `CREATE TABLE ${MOVIE_PRODUCTION_COMPANIES} (
 movie_id integer NOT NULL,
 company_id integer NOT NULL,
 PRIMARY KEY(movie_id, company_id)
+FOREIGN KEY (movie_id) REFERENCES ${MOVIES} (id)
+FOREIGN KEY (company_id) REFERENCES ${PRODUCTION_COMPANIES} (id)
 )`;
 
 describe("Insert Combined Data", () => {
