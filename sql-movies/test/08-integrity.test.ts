@@ -134,13 +134,13 @@ describe("Foreign Keys", () => {
     async done => {
       const movieId = 2000; //movieId changed, because only 2998 movies exist in db, so impossible to pass the test.
       const query = `DELETE FROM ${MOVIES}
-                     WHERE movies.id = ${movieId};
+                     WHERE movies.id = '${movieId}';
                      DELETE FROM ${PRODUCTION_COMPANIES}
                      WHERE production_companies.id = ${movieId};
                      DELETE FROM ${KEYWORDS}
                      WHERE keywords.id = ${movieId};
                      DELETE FROM ${ACTORS}
-                     WHERE actors.id = ${movieId};
+                     WHERE actors.id = '${movieId}';
                      DELETE FROM ${DIRECTORS}
                      WHERE directors.id = ${movieId};
                      DELETE FROM ${GENRES}
