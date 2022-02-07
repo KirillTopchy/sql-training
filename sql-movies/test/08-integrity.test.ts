@@ -8,8 +8,8 @@ import {
   selectProductionCompanyById,
   selectMovieById
 } from "../src/queries/select";
-import { ACTORS, DIRECTORS, GENRES, KEYWORDS, MOVIES, PRODUCTION_COMPANIES } from "../src/table-names";
 import { minutes } from "./utils";
+import { ACTORS, DIRECTORS, GENRES, KEYWORDS, MOVIES, MOVIE_ACTORS, MOVIE_DIRECTORS, MOVIE_GENRES, MOVIE_KEYWORDS, MOVIE_PRODUCTION_COMPANIES, PRODUCTION_COMPANIES } from "../src/table-names";
 
 describe("Foreign Keys", () => {
   let db: Database;
@@ -24,7 +24,10 @@ describe("Foreign Keys", () => {
     async done => {
       const genreId = 5;
       const query = `DELETE FROM ${GENRES}
-                     WHERE genres.id = ${genreId};`;
+                     WHERE genres.id = ${genreId}
+                     AND genres.id NOT IN
+                     (SELECT ${MOVIE_GENRES}.genre_id
+                      FROM ${MOVIE_GENRES})`;
       try {
         await db.delete(query);
       } catch (e) {}
@@ -42,7 +45,10 @@ describe("Foreign Keys", () => {
     async done => {
       const directorId = 7;
       const query = `DELETE FROM ${DIRECTORS}
-                     WHERE directors.id = ${directorId};`;
+                     WHERE directors.id = ${directorId}
+                     AND directors.id NOT IN
+                     (SELECT ${MOVIE_DIRECTORS}.director_id
+                      FROM ${MOVIE_DIRECTORS})`;
       try {
         await db.delete(query);
       } catch (e) {}
@@ -60,7 +66,10 @@ describe("Foreign Keys", () => {
     async done => {
       const actorId = 10;
       const query = `DELETE FROM ${ACTORS}
-                     WHERE actors.id = ${actorId};`;
+                     WHERE actors.id = ${actorId}
+                     AND keywords.id NOT IN
+                     (SELECT ${MOVIE_ACTORS}.keyword_id
+                      FROM ${MOVIE_ACTORS})`;
       try {
         await db.delete(query);
       } catch (e) {}
@@ -78,7 +87,10 @@ describe("Foreign Keys", () => {
     async done => {
       const keywordId = 12;
       const query = `DELETE FROM ${KEYWORDS}
-                     WHERE keywords.id = ${keywordId};`;
+                     WHERE keywords.id = ${keywordId}
+                     AND keywords.id NOT IN
+                      (SELECT ${MOVIE_KEYWORDS}.keyword_id
+                       FROM ${MOVIE_KEYWORDS})`;
       try {
         await db.delete(query);
       } catch (e) {}
@@ -96,7 +108,10 @@ describe("Foreign Keys", () => {
     async done => {
       const companyId = 12;
       const query = `DELETE FROM ${PRODUCTION_COMPANIES}
-                     WHERE production_companies.id = ${companyId};`;
+                     WHERE production_companies.id = ${companyId}
+                     AND production_companies.id NOT IN
+                        (SELECT ${MOVIE_PRODUCTION_COMPANIES}.company_id
+                         FROM ${MOVIE_PRODUCTION_COMPANIES})`;
       try {
         await db.delete(query);
       } catch (e) {}
@@ -116,7 +131,22 @@ describe("Foreign Keys", () => {
     async done => {
       const movieId = 100;
       const query = `DELETE FROM ${MOVIES}
-                     WHERE movies.id = ${movieId};`;
+                     WHERE movies.id = ${movieId}
+                     AND movies.id NOT IN
+                      (SELECT ${MOVIE_GENRES}.movie_id
+                       FROM ${MOVIE_GENRES}) 
+                     AND movies.id NOT IN
+                      (SELECT ${MOVIE_ACTORS}.movie_id
+                        FROM ${MOVIE_ACTORS}) 
+                    AND movies.id NOT IN
+                      (SELECT ${MOVIE_DIRECTORS}.movie_id
+                        FROM ${MOVIE_DIRECTORS}) 
+                    AND movies.id NOT IN
+                      (SELECT ${MOVIE_KEYWORDS}.movie_id
+                        FROM ${MOVIE_KEYWORDS}) 
+                    AND movies.id NOT IN
+                      (SELECT ${MOVIE_PRODUCTION_COMPANIES}.movie_id
+                        FROM ${MOVIE_PRODUCTION_COMPANIES});`;
       try {
         await db.delete(query);
       } catch (e) {}
@@ -132,19 +162,19 @@ describe("Foreign Keys", () => {
   it(
     "should be able to delete movie",
     async done => {
-      const movieId = 2000; //movieId changed, because only 2998 movies exist in db, so impossible to pass the test.
+      const movieId = 2000;
       const query = `DELETE FROM ${MOVIES}
-                     WHERE movies.id = ${movieId};
-                     DELETE FROM ${PRODUCTION_COMPANIES}
-                     WHERE production_companies.id = ${movieId};
-                     DELETE FROM ${KEYWORDS}
-                     WHERE keywords.id = ${movieId};
-                     DELETE FROM ${ACTORS}
-                     WHERE actors.id = ${movieId};
-                     DELETE FROM ${DIRECTORS}
-                     WHERE directors.id = ${movieId};
-                     DELETE FROM ${GENRES}
-                     WHERE genres.id = ${movieId};`;
+      WHERE movies.id = ${movieId};
+      DELETE FROM ${PRODUCTION_COMPANIES}
+      WHERE production_companies.id = ${movieId};
+      DELETE FROM ${KEYWORDS}
+      WHERE keywords.id = ${movieId};
+      DELETE FROM ${ACTORS}
+      WHERE actors.id = ${movieId};
+      DELETE FROM ${DIRECTORS}
+      WHERE directors.id = ${movieId};
+      DELETE FROM ${GENRES}
+      WHERE genres.id = ${movieId};`;
 
       await db.delete(query);
 
